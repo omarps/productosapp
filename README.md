@@ -9,3 +9,4 @@ CRUD Operations for Product and Category Entities.
 - Spring MVC / Spring Data
 - JPA / HSQL
 - jQuery / AJAX
+- Netbeans / Maven
