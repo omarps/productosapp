@@ -7,4 +7,5 @@ CRUD Operations for Product and Category Entities.
 - HTML5 / Bootstrap (Responsive)
 - Freemarker
 - Spring MVC / Spring Data
+- JPA / HSQL
 - jQuery / AJAX
