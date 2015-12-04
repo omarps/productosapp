@@ -16,7 +16,7 @@ var ProductApp = {
 
 ProductApp.category.list = function() {
     $.get("./api/category", function(data) {
-        //console.log( data, data["_embedded"] );
+//        console.log( data, data["_embedded"] );
         if ((_embedded = data["_embedded"]) != null
                 && (category = _embedded["category"]) != null) {
             $("#categories_table > tbody > tr").empty();
@@ -35,10 +35,16 @@ ProductApp.category.list = function() {
                     );
             
             // list contents
+            var categories = [];
             $.each(category, function(ix, c) {
                 //  console.log(ix, c);
                 var link = c["_links"]["self"]["href"];
                 id = ProductApp.helper.urlId(link);
+                name = c["name"];
+                categories.push({
+                    id: id,
+                    name: name
+                });
                 tbody.append($("<tr>")
                         .append($("<td>").text(id))
                         .append($("<td>").attr({
@@ -62,6 +68,10 @@ ProductApp.category.list = function() {
             });
             $(".category_edit").click(ProductApp.category.edit);
             $(".category_delete").click(ProductApp.category.delete);
+            
+            var categoryComboTmpl = $.templates("#categoryComboTmpl");
+            var html = categoryComboTmpl.render(categories);
+            $("#product_category_tmpl").html(html);
         }
     });
 };
