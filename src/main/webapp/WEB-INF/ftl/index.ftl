@@ -16,13 +16,23 @@
                             <th></th>
                             </tr>
                         </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="3">No categories.</td>
-                            </tr>
-                        </tbody>
+                    <tbody></tbody>
                     </table>
-
+                <script id="categoriesTableTmpl" type="text/x-jsrender">
+                    <tr>
+                    <td>{{:id}}</td>
+                    <td id="category_name_{{:id}}">{{:name}}</td>
+                    <td>
+                    <button id="category_edit_{{:id}}" class="category_edit btn">Edit</button>
+                    <button id="category_delete_{{:id}}" class="category_delete btn btn-danger">Delete</button>
+                    </td>
+                    </tr>
+                    </script>
+                <script id="categoriesTableEmptyTmpl" type="text/x-jsrender">
+                    <tr>
+                    <td colspan="3">No categories.</td>
+                    </tr>
+                    </script>
                 </div>
             </div>
         </section>
@@ -81,11 +91,9 @@
                 <input type="text" id="product_description" name="product_description" placeholder="Product description…" class="input-xxlarge"/>
                 <label>Category</label>
                 <select id="product_category" name="product_category"></select>
-                <select id="product_category_tmpl" name="product_category">
-                    <script id="categoryComboTmpl" type="text/x-jsrender">
-                        <option value="{{:id}}">{{:name}}</option>
-                        </script>
-                    </select>
+                <script id="categoryComboTmpl" type="text/x-jsrender">
+                    <option value="{{:id}}">{{:name}}</option>
+                    </script>
                 <div>
                     <button type="button" id="product_submit" class="btn btn-primary">Save</button>
                     <button type="reset" class="btn">Reset</button>
