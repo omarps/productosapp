@@ -9,6 +9,7 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
  * @author omarps@gmail.com
  */
 @RepositoryRestResource(collectionResourceRel = "category", path = "category")
-public interface CategoryRepository extends PagingAndSortingRepository<Category, Integer> {
+public interface CategoryRepository//
+        extends PagingAndSortingRepository<Category, Integer> {
     
 }
