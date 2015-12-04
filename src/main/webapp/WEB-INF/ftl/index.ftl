@@ -3,6 +3,10 @@
 <@u.page>
 
 <div class="container">
+    <h3>The date is: ${model.thedate?date} - ${model.thedate?time}</h3>
+    </div>
+
+<div class="container">
     <section id="categories">
         <div class="row">
             <div class="span6">

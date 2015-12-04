@@ -181,7 +181,7 @@ ProductApp.product.list = function () {
             $(".product_edit").click(ProductApp.product.edit);
             $(".product_delete").click(ProductApp.product.delete);
 
-            // resolve products' categories detail
+            // resolve products' categories detail. (async)
             ProductApp.product.categoryDetail(products);
         } else {
             // empty list
