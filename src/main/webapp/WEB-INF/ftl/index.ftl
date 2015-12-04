@@ -69,13 +69,25 @@
                             <th></th>
                             </tr>
                         </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="5">No products.</td>
-                            </tr>
-                        </tbody>
+                    <tbody></tbody>
                     </table>
-
+                <script id="productsTableTmpl" type="text/x-jsrender">
+                    <tr>
+                    <td>{{:id}}</td>
+                    <td id="product_name_{{:id}}">{{:name}}</td>
+                    <td id="product_description_{{:id}}">{{:description}}</td>
+                    <td id="product_category_{{:id}}"></td>
+                    <td>
+                    <button id="product_edit_{{:id}}" class="product_edit btn">Edit</button>
+                    <button id="product_delete_{{:id}}" class="product_delete btn btn-danger">Delete</button>
+                    </td>
+                    </tr>
+                    </script>
+                <script id="productsTableEmptyTmpl" type="text/x-jsrender">
+                    <tr>
+                    <td colspan="5">No products.</td>
+                    </tr>
+                    </script>
                 </div>
             </div>
         </section>

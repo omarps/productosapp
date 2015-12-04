@@ -16,14 +16,10 @@ var ProductApp = {
 
 ProductApp.category.list = function () {
     $.get("./api/category", function (data) {
-//        console.log(data, data["_embedded"]);
+        // if there is data and not empty
         if ((_embedded = data["_embedded"]) != null
-                && (category = _embedded["category"]) != null) {
-            // empty list
-            if (category.length == 0) {
-                ProductApp.category.empty();
-            }
-
+                && (category = _embedded["category"]) != null
+                && (category.length > 0)) {
             // arrays
             var categories = [];
             var categories_combo = [
@@ -32,30 +28,31 @@ ProductApp.category.list = function () {
                     name: "Select --"
                 }
             ];
-            
+
             // list contents
             $.each(category, function (ix, c) {
-                //  console.log(ix, c);
                 var link = c["_links"]["self"]["href"];
-                id = ProductApp.helper.urlId(link);
-                name = c["name"];
                 categories.push({
-                    id: id,
-                    name: name
+                    id: ProductApp.helper.urlId(link),
+                    name: c["name"]
                 });
             });
 
+            // table templates
             var categoriesTableTmpl = $.templates("#categoriesTableTmpl");
             html = categoriesTableTmpl.render(categories);
             $("#categories_table > tbody").html(html);
+            // table actions
             $(".category_edit").click(ProductApp.category.edit);
             $(".category_delete").click(ProductApp.category.delete);
 
+            // combo templates
             var categoryComboTmpl = $.templates("#categoryComboTmpl");
             categories_combo = categories_combo.concat(categories);
             html = categoryComboTmpl.render(categories_combo);
             $("#product_category").html(html);
         } else {
+            // empty list
             ProductApp.category.empty();
         }
     });
@@ -64,8 +61,8 @@ ProductApp.category.list = function () {
 ProductApp.category.empty = function () {
     var categoriesTableEmptyTmpl = $.templates("#categoriesTableEmptyTmpl");
     html = categoriesTableEmptyTmpl.render();
-    $("#categories_table_tmpl > tbody").html(html);
-}
+    $("#categories_table > tbody").html(html);
+};
 
 ProductApp.category.save = function () {
     var category_name = $('#category_name').val();
@@ -157,62 +154,58 @@ ProductApp.category.clear = function () {
 
 ProductApp.product.list = function () {
     $.get("./api/product", function (data) {
-        //console.log( data, data["_embedded"] );
+        // if there is data and not empty
         if ((_embedded = data["_embedded"]) != null
-                && (product = _embedded["product"]) != null) {
-            $("#products_table > tbody > tr").empty();
-            var tbody = $("#products_table > tbody");
-            // empty list
-            if (product.length == 0) {
-                tbody.append($("<tr>")
-                        .append($("<td>").attr("colspan", "5").text("No products."))
-                        );
-            }
+                && (product = _embedded["product"]) != null
+                && (product.length > 0)) {
+            // array
+            var products = [];
 
             // list contents
-            $.each(product, function (ix, c) {
+            $.each(product, function (ix, p) {
                 //console.log(ix, c);
-                var link = c["_links"]["self"]["href"];
-                id = ProductApp.helper.urlId(link);
-
-                tbody.append($("<tr>")
-                        .append($("<td>").text(id))
-                        .append($("<td>").attr({
-                            "id": "product_name_" + id
-                        }).text(c["name"]))
-                        .append($("<td>").attr({
-                            "id": "product_description_" + id
-                        }).text(c["description"]))
-                        .append($("<td>").attr({
-                            "id": "product_category_" + id
-                        }))
-                        .append($("<td>")
-                                .append($("<button>").attr({
-                                    "id": "product_edit_" + id,
-                                    "class": "product_edit btn"
-                                }).text("Edit")).append(" ")
-                                .append($("<button>").attr({
-                                    "id": "product_delete_" + id,
-                                    "class": "product_delete btn btn-danger"
-                                }).text("Delete"))
-                                )
-                        );
-
-                var category_url = c["_links"]["category"]["href"];
-                $.get(category_url, function (data) {
-                    var product_url = this.url.replace("/category", "");
-                    var product_id = ProductApp.helper.urlId(product_url);
-                    //console.log(data, this.url, product_url);
-                    var link = data["_links"]["self"]["href"];
-                    category_id = ProductApp.helper.urlId(link);
-                    //console.log(category_id, link);
-                    $("#product_category_" + product_id)
-                            .attr("category_id", category_id).text(data["name"]);
+                var link = p["_links"]["self"]["href"];
+                products.push({
+                    id: ProductApp.helper.urlId(link),
+                    name: p["name"],
+                    description: p["description"],
+                    category_url: p["_links"]["category"]["href"]
                 });
             });
+
+            // table templates
+            var productsTableTmpl = $.templates("#productsTableTmpl");
+            html = productsTableTmpl.render(products);
+            $("#products_table > tbody").html(html);
+            // table actions
             $(".product_edit").click(ProductApp.product.edit);
             $(".product_delete").click(ProductApp.product.delete);
+
+            // resolve products' categories detail
+            ProductApp.product.categoryDetail(products);
+        } else {
+            // empty list
+            ProductApp.product.empty();
         }
+    });
+};
+
+ProductApp.product.empty = function () {
+    var productsTableEmptyTmpl = $.templates("#productsTableEmptyTmpl");
+    html = productsTableEmptyTmpl.render();
+    $("#products_table > tbody").html(html);
+};
+
+ProductApp.product.categoryDetail = function (products) {
+    $.each(products, function (ix, p) {
+        $.get(p.category_url, function (data) {
+            var product_url = this.url.replace("/category", "");
+            var product_id = ProductApp.helper.urlId(product_url);
+            var link = data["_links"]["self"]["href"];
+            category_id = ProductApp.helper.urlId(link);
+            $("#product_category_" + product_id)
+                    .attr("category_id", category_id).text(data["name"]);
+        });
     });
 };
 
